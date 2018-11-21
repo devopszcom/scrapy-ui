@@ -1,0 +1,34 @@
+#
+# Source code address
+# https://hub.docker.com/u/cuongtransc/
+#
+# Syntax: https://docs.docker.com/compose/compose-file/
+#
+
+version: "3"
+
+services:
+
+    scrapy_ui:
+        #restart: always
+        build: .
+        image: scrapy_ui:0.1.0
+        networks:
+            - scrapy_ui
+        ports:
+            - "0.0.0.0:8000:8000"
+        volumes:
+            - ./:/usr/src/app
+        hostname: scrapy_ui
+        environment:
+            DJANGO_SETTINGS_MODULE: 'config.settings.base'
+        # command: /usr/local/bin/gunicorn config.wsgi:application -w 2 -b :8000
+#        command: python3 manage.py runserver 0.0.0.0:8000
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "100M"
+                max-file: "3"
+
+networks:
+    scrapy_ui:
