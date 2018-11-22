@@ -6,13 +6,19 @@
 <div class="row">
 
     {% for node in nodes %}
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="alert alert-dismissible alert-info crawler-node">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
+
+            <h2>{{node.name}}
+                <small style="font-size: 50%">{{node.host}}:{{node.port}}</small>
+            </h2>
+            {% for project in node.projects %}
             <a href="">
-                <h2>{{node.name}}</h2>
-                <strong>{{node.host}}:{{node.port}}</strong>
+                <strong>{{project}}</strong>
             </a>
+            {% endfor %}
+
         </div>
     </div>
 
