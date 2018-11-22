@@ -22,5 +22,5 @@ urlpatterns = [
     # path('', RedirectView.as_view(url="/dashboard/"), name='home'),
     path('admin/', admin.site.urls),
 
-    path('', include(('scrapy_ui.crawler.urls', 'index'), namespace='index')),
+    path('', include(('scrapy_ui.crawler.urls', 'crawler'), namespace='crawler')),
 ]

@@ -32,15 +32,6 @@
             <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-            </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search">
@@ -54,6 +45,28 @@
 </nav>
 
 <div class="container">
+    {% if messages %}
+    <div class="row" style="margin-top: 5px">
+        <div class="col-md-12">
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <strong>Success!</strong> {{ message|safe }}
+            </div>
+            {% elif message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <strong>Error!</strong> {{ message|safe }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% endif %}
 
     {% block content %}
 
@@ -68,9 +81,9 @@
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="#" method="post">
+            <form action="{% url 'crawler:add_node' %}" method="post">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add New Node</h5>
+                    <h5 class="modal-title">Add New Node</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -79,24 +92,24 @@
 
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="">
+                        <input type="text" required class="form-control" id="name" name="name" placeholder="">
                     </div>
 
                     <div class="form-group">
                         <label for="host">Host</label>
-                        <input type="text" class="form-control" id="host" placeholder="127.0.0.1">
+                        <input type="text" required class="form-control" id="host" name="host" placeholder="127.0.0.1">
                     </div>
 
                     <div class="form-group">
                         <label for="port">Port</label>
-                        <input type="text" class="form-control" id="port" value="6800">
+                        <input type="text" required class="form-control" id="port" name="port" value="6800">
                     </div>
 
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Add Node</button>
                 </div>
 
             </form>

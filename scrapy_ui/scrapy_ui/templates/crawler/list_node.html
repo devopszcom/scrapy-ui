@@ -4,35 +4,19 @@
 {% block content %}
 <h1>List Crawler Nodes</h1>
 <div class="row">
+
+    {% for node in nodes %}
     <div class="col-md-3">
         <div class="alert alert-dismissible alert-info crawler-node">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <a href="">
-                <h2>Etsy Crawler</h2>
-                <strong>127.0.0.1:6800</strong>
+                <h2>{{node.name}}</h2>
+                <strong>{{node.host}}:{{node.port}}</strong>
             </a>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="alert alert-dismissible alert-info crawler-node">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <a href="">
-                <h2>Etsy Crawler</h2>
-                <strong>127.0.0.1:6800</strong>
-            </a>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="alert alert-dismissible alert-info crawler-node">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <a href="">
-                <h2>Etsy Crawler</h2>
-                <strong>127.0.0.1:6800</strong>
-            </a>
-        </div>
-    </div>
+    {% endfor %}
 
 </div>
 
