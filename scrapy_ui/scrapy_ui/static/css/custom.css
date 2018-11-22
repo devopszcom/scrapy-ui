@@ -1,0 +1,8 @@
+.crawler-node a{
+    color: #ffffff;
+}
+
+.crawler-node a:hover{
+    text-decoration: None;
+    color: #777a75;
+}

@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'scrapy_ui.crawler.apps.CrawlerConfig',
+    'scrapy_ui.dashboard.apps.DashboardConfig',
 ]
 
 MIDDLEWARE = [

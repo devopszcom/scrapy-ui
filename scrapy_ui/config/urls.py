@@ -19,8 +19,8 @@ from django.views.generic import RedirectView
 
 
 urlpatterns = [
-    path('', RedirectView.as_view(url="/dashboard/"), name='home'),
+    # path('', RedirectView.as_view(url="/dashboard/"), name='home'),
     path('admin/', admin.site.urls),
 
-    path('dashboard/', include(('scrapy_ui.dashboard.urls', 'dashboard'), namespace='dashboard')),
+    path('', include(('scrapy_ui.crawler.urls', 'index'), namespace='index')),
 ]
