@@ -84,3 +84,7 @@ body{
     display: inline-block;
     line-height: 1.4;
 }
+
+.spider-name {
+    font-size: 1em;
+}

@@ -45,7 +45,7 @@ def status_node(request, node_id, project_name):
     context['status'] = status
     context['jobs'] = jobs
     context['spiders'] = spiders
-    context['log_url'] = ""
+    context['log_url'] = "http://{}:{}/logs/{}".format(node.host, node.port, project_name)
     return render(request, 'crawler/status_node.html', context)
 
 

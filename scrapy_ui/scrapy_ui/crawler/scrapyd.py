@@ -1,9 +1,15 @@
+"""
+Client for scrapyd API
+Visit: https://scrapyd.readthedocs.io/en/stable/overview.html
+
+@author: cuongnb14@gmail.com
+"""
 import requests
 
+
 class ScraydAPI:
-    def __init__(self, host="localhost", port=6800, project="default"):
+    def __init__(self, host="localhost", port=6800):
         self.base_url = "http://{}:{}".format(host, port)
-        self.project = project
 
     def daemonstatus(self):
         response = requests.get("{}/daemonstatus.json".format(self.base_url))
@@ -31,6 +37,14 @@ class ScraydAPI:
         response = requests.get("{}/listspiders.json".format(self.base_url), params=params)
         return response.json()
 
-    def listprojects(self, project='default'):
+    def listprojects(self):
         response = requests.get("{}/listprojects.json".format(self.base_url))
+        return response.json()["projects"]
+
+    def cancel(self, job, project='default'):
+        params = {
+            'project': project,
+            'job': job,
+        }
+        response = requests.get("{}/cancel.json".format(self.base_url), params=params)
         return response.json()["projects"]

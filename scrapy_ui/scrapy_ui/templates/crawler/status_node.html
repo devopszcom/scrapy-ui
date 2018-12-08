@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
+{% block title %} {{ status.node_name }} | Scrapy UI {% endblock %}
+
 {% block content %}
 
     <div class="row tile_count">
@@ -9,7 +11,7 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-cogs"></i>
                 </div>
-                <div class="count text-info" style="text-transform: uppercase;">ok</div>
+                <div class="count text-info" style="text-transform: uppercase;">{{ status.status }}</div>
                 <h3>Spider Status</h3>
                 <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
             </div>
@@ -19,7 +21,7 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-pause"></i>
                 </div>
-                <div class="count text-info" style="text-transform: uppercase;">0</div>
+                <div class="count text-info" style="text-transform: uppercase;">{{ status.pending }}</div>
                 <h3>Pending Jobs</h3>
                 <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
             </div>
@@ -29,7 +31,7 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-play"></i>
                 </div>
-                <div class="count text-info" style="text-transform: uppercase;">0</div>
+                <div class="count text-info" style="text-transform: uppercase;">{{ status.running }}</div>
                 <h3>Running Jobs</h3>
                 <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
             </div>
@@ -39,7 +41,7 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-stop"></i>
                 </div>
-                <div class="count text-info" style="text-transform: uppercase;">9</div>
+                <div class="count text-info" style="text-transform: uppercase;">{{ status.finished }}</div>
                 <h3>Finished Jobs</h3>
                 <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
             </div>
@@ -61,8 +63,8 @@
             <tbody>
             {% for spider in spiders %}
                 <tr>
-                    <td>{{ spider }}</td>
-                    <td><a class="btn btn-default" href=""><i
+                    <td><span class="badge badge-info spider-name">{{ spider }}</span></td>
+                    <td><a class="btn btn-info" href=""><i
                             class="fa fa-play"></i> Run</a></td>
                 </tr>
             {% endfor %}
@@ -75,7 +77,7 @@
         <table class="table">
             <thead class="thead-light">
             <tr>
-                <th>id</th>
+                <th>ID</th>
                 <th>Spider name</th>
                 <th>Pid</th>
                 <th>Start time</th>
@@ -83,10 +85,13 @@
             </tr>
             </thead>
             <tbody>
+            {% if not jobs.running %}
+                <tr><td class="no-table-data">No running jobs</td></tr>
+            {% endif %}
             {% for job in jobs.running %}
                 <tr>
                     <td>{{ job.id }}</td>
-                    <td>{{ job.spider }}</td>
+                    <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td>{{ job.pid }}</td>
                     <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
                     <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
@@ -101,16 +106,19 @@
         <table class="table">
             <thead class="thead-light">
             <tr>
-                <th>id</th>
+                <th>ID</th>
                 <th>Spider name</th>
                 <th>Logs</th>
             </tr>
             </thead>
             <tbody>
+            {% if not jobs.pending %}
+                <tr><td class="no-table-data">No pending jobs </td></tr>
+            {% endif %}
             {% for job in jobs.pending %}
                 <tr>
                     <td>{{ job.id }}</td>
-                    <td>{{ job.spider }}</td>
+                    <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
                 </tr>
             {% endfor %}
@@ -124,7 +132,7 @@
         <table class="table">
             <thead class="thead-light">
             <tr>
-                <th>id</th>
+                <th>ID</th>
                 <th>Spider name</th>
                 <th>Start time</th>
                 <th>End time</th>
@@ -133,10 +141,13 @@
             </tr>
             </thead>
             <tbody>
+            {% if not jobs.finished %}
+                <tr><td class="no-table-data">No finished jobs </td></tr>
+            {% endif %}
             {% for job in jobs.finished %}
                 <tr>
                     <td>{{ job.id }}</td>
-                    <td>{{ job.spider }}</td>
+                    <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
                     <td class="mm-time" data-utc="{{ job.end_time }}">{{ job.end_time }}</td>
                     <td>{{ job.during|floatformat:-2 }}</td>
