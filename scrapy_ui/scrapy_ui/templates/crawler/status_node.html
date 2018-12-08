@@ -53,14 +53,14 @@
             <thead class="thead-light">
             <tr>
                 <th>Spider name</th>
-                <th width="10%">Run Now</th>
+                <th width="10%" class="text-right">Run Now</th>
             </tr>
             </thead>
             <tbody>
             {% for spider in spiders %}
                 <tr>
                     <td><span class="badge badge-info spider-name">{{ spider }}</span></td>
-                    <td><a class="btn btn-info btn-sm" href="{% url 'crawler:add_job' node.id project_name spider %}"><i class="fa fa-play"></i> Run</a></td>
+                    <td class="text-right"><a class="btn btn-info btn-sm" href="{% url 'crawler:add_job' node.id project_name spider %}"><i class="fa fa-play"></i> Run</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -77,7 +77,7 @@
                 <th>Pid</th>
                 <th>Start time</th>
                 <th>Logs</th>
-                <th>Cancel</th>
+                <th class="text-right">Cancel</th>
             </tr>
             </thead>
             <tbody>
@@ -91,7 +91,7 @@
                     <td>{{ job.pid }}</td>
                     <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
                     <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
-                    <td><a class="btn btn-danger btn-sm" href=""><i class="fa fa-times"></i> Cancel</a></td>
+                    <td class="text-right"><a class="btn btn-danger btn-sm" href="{% url 'crawler:cancel_job' node.id project_name job.id %}"><i class="fa fa-times"></i> Cancel</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -106,6 +106,7 @@
                 <th>ID</th>
                 <th>Spider name</th>
                 <th>Logs</th>
+                <th class="text-right">Cancel</th>
             </tr>
             </thead>
             <tbody>
@@ -117,6 +118,7 @@
                     <td>{{ job.id }}</td>
                     <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
+                    <td class="text-right"><a class="btn btn-danger btn-sm" href="{% url 'crawler:cancel_job' node.id project_name job.id %}"><i class="fa fa-times"></i> Cancel</a></td>
                 </tr>
             {% endfor %}
             </tbody>

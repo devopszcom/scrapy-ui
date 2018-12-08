@@ -74,3 +74,15 @@ def add_job(request, node_id, project_name, spider_name):
     else:
         messages.add_message(request, messages.ERROR, '{}'.format(result["message"]))
     return redirect(reverse("crawler:status_node", kwargs={"node_id": node.id, "project_name": project_name}))
+
+
+@csrf_exempt
+def cancel_job(request, node_id, project_name, job_id):
+    node = models.CrawlerNode.objects.get(pk=node_id)
+    scrapy_client = ScraydAPI(host=node.host, port=node.port)
+    result = scrapy_client.cancel(job_id, project_name)
+    if result["status"] == "ok":
+        messages.add_message(request, messages.SUCCESS, 'Cancel job id: {}. Received SIGTERM, shutting down gracefully. Please wait or send again to force'.format(job_id))
+    else:
+        messages.add_message(request, messages.ERROR, '{}'.format(result["message"]))
+    return redirect(reverse("crawler:status_node", kwargs={"node_id": node.id, "project_name": project_name}))

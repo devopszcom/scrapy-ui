@@ -46,5 +46,5 @@ class ScraydAPI:
             'project': project,
             'job': job,
         }
-        response = requests.get("{}/cancel.json".format(self.base_url), params=params)
-        return response.json()["projects"]
+        response = requests.post("{}/cancel.json".format(self.base_url), params=params)
+        return response.json()
