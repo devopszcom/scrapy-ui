@@ -3,48 +3,150 @@
 
 {% block content %}
 
-<div class="row tile_count">
+    <div class="row tile_count">
 
-    <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="tile-stats">
-            <div class="icon"><i class="fa fa-cogs"></i>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-cogs"></i>
+                </div>
+                <div class="count text-info" style="text-transform: uppercase;">ok</div>
+                <h3>Spider Status</h3>
+                <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
             </div>
-            <div class="count text-info" style="text-transform: uppercase;">ok</div>
-            <h3>Spider Status</h3>
-            <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
         </div>
+
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-pause"></i>
+                </div>
+                <div class="count text-info" style="text-transform: uppercase;">0</div>
+                <h3>Pending Jobs</h3>
+                <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
+            </div>
+        </div>
+
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-play"></i>
+                </div>
+                <div class="count text-info" style="text-transform: uppercase;">0</div>
+                <h3>Running Jobs</h3>
+                <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
+            </div>
+        </div>
+
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-stop"></i>
+                </div>
+                <div class="count text-info" style="text-transform: uppercase;">9</div>
+                <h3>Finished Jobs</h3>
+                <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
+            </div>
+        </div>
+
     </div>
 
-    <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="tile-stats">
-            <div class="icon"><i class="fa fa-pause"></i>
-            </div>
-            <div class="count" style="text-transform: uppercase;">0</div>
-            <h3>Pending Jobs</h3>
-            <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
-        </div>
+
+
+    <div class="sui-box">
+        <h3 class="title">Spider</h3>
+        <table class="table ">
+            <thead class="thead-light">
+            <tr>
+                <th>Spider name</th>
+                <th width="10%">Run Now</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for spider in spiders %}
+                <tr>
+                    <td>{{ spider }}</td>
+                    <td><a class="btn btn-default" href=""><i
+                            class="fa fa-play"></i> Run</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="tile-stats">
-            <div class="icon"><i class="fa fa-play"></i>
-            </div>
-            <div class="count" style="text-transform: uppercase;">0</div>
-            <h3>Running Jobs</h3>
-            <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
-        </div>
+    <div class="sui-box">
+        <h3 class="title">Running Jobs</h3>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th>id</th>
+                <th>Spider name</th>
+                <th>Pid</th>
+                <th>Start time</th>
+                <th>Logs</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for job in jobs.running %}
+                <tr>
+                    <td>{{ job.id }}</td>
+                    <td>{{ job.spider }}</td>
+                    <td>{{ job.pid }}</td>
+                    <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
+                    <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="tile-stats">
-            <div class="icon"><i class="fa fa-stop"></i>
-            </div>
-            <div class="count" style="text-transform: uppercase;">9</div>
-            <h3>Finished Jobs</h3>
-            <!--<p>Lorem ipsum psdea itgum rixt.</p>-->
-        </div>
+    <div class="sui-box">
+        <h3 class="title">Pending Jobs</h3>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th>id</th>
+                <th>Spider name</th>
+                <th>Logs</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for job in jobs.pending %}
+                <tr>
+                    <td>{{ job.id }}</td>
+                    <td>{{ job.spider }}</td>
+                    <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-</div>
+
+    <div class="sui-box">
+        <h3 class="title">Finished Jobs</h3>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th>id</th>
+                <th>Spider name</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>During (minutes)</th>
+                <th>Logs</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for job in jobs.finished %}
+                <tr>
+                    <td>{{ job.id }}</td>
+                    <td>{{ job.spider }}</td>
+                    <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
+                    <td class="mm-time" data-utc="{{ job.end_time }}">{{ job.end_time }}</td>
+                    <td>{{ job.during|floatformat:-2 }}</td>
+                    <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </table>
+    </div>
+
 
 {% endblock %}

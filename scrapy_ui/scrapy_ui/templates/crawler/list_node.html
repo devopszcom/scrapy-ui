@@ -14,7 +14,7 @@
                 <small style="font-size: 50%">{{node.host}}:{{node.port}}</small>
             </h2>
             {% for project in node.projects %}
-            <a href="">
+            <a href="{% url 'crawler:status_node' node.id project %}">
                 <strong>{{project}}</strong>
             </a>
             {% endfor %}

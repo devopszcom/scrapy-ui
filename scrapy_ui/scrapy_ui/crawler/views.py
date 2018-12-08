@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -23,11 +25,28 @@ def index(request):
         return render(request, 'crawler/list_node.html', context)
 
 
-def status_node(request, node_id):
+def status_node(request, node_id, project_name):
     context = dict()
-    if request.method == 'GET':
-        context["nodes"] = models.CrawlerNode.objects.all()
-        return render(request, 'crawler/status_node.html', context)
+    node = models.CrawlerNode.objects.get(pk=node_id)
+    scrapy_client = ScraydAPI(host=node.host, port=node.port)
+    status = scrapy_client.daemonstatus()
+
+    spiders = scrapy_client.listspiders()["spiders"]
+
+    jobs = scrapy_client.listjobs()
+
+    jobs['finished'] = list(reversed(jobs['finished']))[:15]
+
+    for job in jobs['finished']:
+        during = datetime.strptime(job["end_time"], "%Y-%m-%d %H:%M:%S.%f") - datetime.strptime(
+            job["start_time"], "%Y-%m-%d %H:%M:%S.%f")
+        job["during"] = during.total_seconds() / 60
+
+    context['status'] = status
+    context['jobs'] = jobs
+    context['spiders'] = spiders
+    context['log_url'] = ""
+    return render(request, 'crawler/status_node.html', context)
 
 
 @csrf_exempt
