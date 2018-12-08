@@ -2,28 +2,52 @@
 {% load static i18n %}
 
 {% block content %}
-<h1>List Crawler Nodes</h1>
-<div class="row">
+    <h1>List Crawler Nodes</h1>
+    <div class="row">
 
-    {% for node in nodes %}
-    <div class="col-md-4">
-        <div class="alert alert-dismissible alert-info crawler-node">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {% for node in nodes %}
+            <div class="col-md-4">
+                <div class="alert alert-dismissible alert-info crawler-node">
+                    <button type="button" class="btn btn-primary close" data-toggle="modal" data-target="#delete-{{ node.id }}-modal"><i class="fa fa-times"></i></button>
 
-            <h2>{{node.name}}
-                <small style="font-size: 50%">{{node.host}}:{{node.port}}</small>
-            </h2>
-            {% for project in node.projects %}
-            <a href="{% url 'crawler:status_node' node.id project %}">
-                <strong>{{project}}</strong>
-            </a>
-            {% endfor %}
+                    <h2>{{ node.name }}
+                        <small style="font-size: 50%">{{ node.host }}:{{ node.port }}</small>
+                    </h2>
+                    {% for project in node.projects %}
+                        <a href="{% url 'crawler:status_node' node.id project %}">
+                            <strong>{{ project }}</strong>
+                        </a>
+                    {% endfor %}
 
-        </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="delete-{{ node.id }}-modal" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form action="{% url 'crawler:delete_node' node.id %}" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Confirm Delete</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure delete node: <b>{{ node.name }}</b>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
     </div>
-
-    {% endfor %}
-
-</div>
 
 {% endblock %}

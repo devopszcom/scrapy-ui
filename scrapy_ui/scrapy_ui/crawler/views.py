@@ -65,6 +65,14 @@ def add_node(request):
 
 
 @csrf_exempt
+def delete_node(request, node_id):
+    if request.method == 'POST':
+        node = models.CrawlerNode.objects.get(pk=node_id)
+        node.delete()
+        messages.add_message(request, messages.SUCCESS, 'Deleted Node: {}'.format(node_id))
+        return redirect(reverse("crawler:index"))
+
+@csrf_exempt
 def add_job(request, node_id, project_name, spider_name):
     node = models.CrawlerNode.objects.get(pk=node_id)
     scrapy_client = ScraydAPI(host=node.host, port=node.port)
