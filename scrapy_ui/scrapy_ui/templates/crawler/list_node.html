@@ -2,7 +2,8 @@
 {% load static i18n %}
 
 {% block content %}
-    <h1>List Crawler Nodes</h1>
+    <div class="sui-box list-crawl-box">
+        <h3 class="title">List Crawler Nodes</h3>
     <div class="row">
 
         {% for node in nodes %}
@@ -49,5 +50,5 @@
         {% endfor %}
 
     </div>
-
+    </div>
 {% endblock %}
