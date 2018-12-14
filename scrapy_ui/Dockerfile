@@ -1,18 +1,10 @@
 # Author: Cuong Nguyen
 #
-# Build: docker build -t scrapy_ui:0.1.0 .
+# Build: docker build -t devopszcom/scrapy_ui:0.1.0 .
 #
 
-FROM ubuntu:16.04
+FROM python:3.6.7-alpine
 LABEL maintainer="cuongnb14@gmail.com"
-
-RUN apt-get update -qq
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python3 python3-pip build-essential python3-dev \
-    libmysqlclient-dev libxml2-dev libxslt1-dev libssl-dev libffi-dev
-
-RUN apt-get install locales && locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
 
 WORKDIR /usr/src/app
 

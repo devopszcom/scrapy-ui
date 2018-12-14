@@ -12,7 +12,7 @@ services:
     scrapy_ui:
         #restart: always
         build: .
-        image: scrapy_ui:0.1.0
+        image: devopszcom/scrapy_ui:0.1.0
         networks:
             - scrapy_ui
         ports:
