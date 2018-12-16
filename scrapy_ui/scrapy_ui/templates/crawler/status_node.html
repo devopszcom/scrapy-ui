@@ -135,7 +135,7 @@
                 <th>Spider name</th>
                 <th>Start time</th>
                 <th>End time</th>
-                <th>During (minutes)</th>
+                <th class="text-right">During</th>
                 <th>Logs</th>
             </tr>
             </thead>
@@ -149,7 +149,7 @@
                     <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
                     <td class="mm-time" data-utc="{{ job.end_time }}">{{ job.end_time }}</td>
-                    <td>{{ job.during|floatformat:-2 }}</td>
+                    <td class="text-right">{{ job.during|floatformat:-2 }} {{ job.during_unit }}</td>
                     <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
                 </tr>
             {% endfor %}

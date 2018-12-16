@@ -41,6 +41,10 @@ def status_node(request, node_id, project_name):
         during = datetime.strptime(job["end_time"], "%Y-%m-%d %H:%M:%S.%f") - datetime.strptime(
             job["start_time"], "%Y-%m-%d %H:%M:%S.%f")
         job["during"] = during.total_seconds() / 60
+        job["during_unit"] = "minutes"
+        if job["during"] > 60:
+            job["during"] = job["during"] / 60
+            job["during_unit"] = "hours"
 
     context['status'] = status
     context['node'] = node
