@@ -1,5 +1,9 @@
 from datetime import datetime
+import requests
+import re
+import json
 
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -7,7 +11,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from .scrapyd import ScraydAPI
 
-from . import models
+from . import models, utils, logger
 
 
 def index(request):
@@ -76,6 +80,7 @@ def delete_node(request, node_id):
         messages.add_message(request, messages.SUCCESS, 'Deleted Node: {}'.format(node_id))
         return redirect(reverse("crawler:index"))
 
+
 @csrf_exempt
 def add_job(request, node_id, project_name, spider_name):
     node = models.CrawlerNode.objects.get(pk=node_id)
@@ -94,7 +99,41 @@ def cancel_job(request, node_id, project_name, job_id):
     scrapy_client = ScraydAPI(host=node.host, port=node.port)
     result = scrapy_client.cancel(job_id, project_name)
     if result["status"] == "ok":
-        messages.add_message(request, messages.SUCCESS, 'Cancel job id: {}. Received SIGTERM, shutting down gracefully. Please wait or send again to force'.format(job_id))
+        messages.add_message(request, messages.SUCCESS,
+                             'Cancel job id: {}. Received SIGTERM, shutting down gracefully. Please wait or send again to force'.format(
+                                 job_id))
     else:
         messages.add_message(request, messages.ERROR, '{}'.format(result["message"]))
     return redirect(reverse("crawler:status_node", kwargs={"node_id": node.id, "project_name": project_name}))
+
+
+def parse_log(request):
+    try:
+        url = "http://25.46.243.254:6800/logs/default/image_raw_product/f6fdad5005c711e991c50242ac110002.log"
+        response = requests.get(url)
+        content = response.text
+        matches = re.search(r"Dumping Scrapy stats:\s({[\w\/\d\s\,\(':\.\)]+})", content)
+        stats = matches.group(1)
+        stats = utils.convert_to_json(stats)
+        result = {
+            "downloader": {},
+            "log_count": {},
+            "scheduler": {},
+            "item_scraped_count": 0,
+            "finish_reason": "",
+            "more": {},
+        }
+        for k, v in stats.items():
+            if k.startswith("downloader"):
+                result["downloader"][k[11:]] = v
+            elif k.startswith("log_count"):
+                result["log_count"][k[10:]] = v
+            elif k.startswith("scheduler"):
+                result["scheduler"][k[10:]] = v
+            else:
+                result["more"][k] = v
+
+        return JsonResponse({"status": "ok", "result": result})
+    except Exception as e:
+        logger.exception(e)
+        return JsonResponse({"status": "error", "result": str(e)})

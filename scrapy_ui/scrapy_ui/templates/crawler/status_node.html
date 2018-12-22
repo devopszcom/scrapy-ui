@@ -145,7 +145,7 @@
             {% endif %}
             {% for job in jobs.finished %}
                 <tr>
-                    <td>{{ job.id }}</td>
+                    <td class="modal-stats-btn" data-url="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">{{ job.id }}</td>
                     <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
                     <td class="mm-time" data-utc="{{ job.end_time }}">{{ job.end_time }}</td>
@@ -158,5 +158,122 @@
         </table>
     </div>
 
+
+    <div id="job-stats-modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Job stats</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <h5>downloader</h5>
+                    <div class="row downloader">
+                        <div class="col-md-3">request_bytes: 6833976</div>
+                    </div>
+
+                    <hr>
+                    <h5>Log count</h5>
+                    <div class="row log_count">
+                        <div class="col-md-3">request_bytes: 6833976</div>
+                    </div>
+
+                    <hr>
+                    <h5>scheduler</h5>
+                    <div class="row scheduler">
+                        <div class="col-md-3">request_bytes: 6833976</div>
+                    </div>
+
+                    <hr>
+                    <h5>More</h5>
+                    <div class="row more">
+                        <div class="col-md-3">request_bytes: 6833976</div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Node</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block style %}
+    <style>
+    .modal-stats-btn {
+        cursor: pointer;
+    }
+    </style>
+
+{% endblock %}
+{% block script %}
+    <script>
+
+        function getElement(key, value){
+            return "<div class=\"col-md-4\">"+ key +": "+ value +"</div>"
+        }
+
+        $(".modal-stats-btn").click(function (e) {
+            console.log($(this).attr("data-url"));
+
+            $.ajax({
+                type:"GET",
+                data: {
+                    url: $(this).attr("data-url")
+                },
+                url: "http://localhost:8000{% url 'crawler:parse_log' %}",
+                success: function(data) {
+                    if(data.status === "ok"){
+                        console.log(data);
+
+                        $('#job-stats-modal .downloader').empty();
+                        var downloader = data.result.downloader;
+                        Object.keys(downloader).forEach(function(key) {
+                            $('#job-stats-modal .downloader').append(getElement(key, downloader[key]));
+                        });
+
+
+                        $('#job-stats-modal .log_count').empty();
+                        var log_count = data.result.log_count;
+                        Object.keys(log_count).forEach(function(key) {
+                            $('#job-stats-modal .log_count').append(getElement(key, log_count[key]));
+                        });
+
+                        $('#job-stats-modal .scheduler').empty();
+                        var scheduler = data.result.scheduler;
+                        Object.keys(scheduler).forEach(function(key) {
+                            $('#job-stats-modal .scheduler').append(getElement(key, scheduler[key]));
+                        });
+
+                        $('#job-stats-modal .more').empty();
+                        var more = data.result.more;
+                        Object.keys(more).forEach(function(key) {
+                            $('#job-stats-modal .more').append(getElement(key, more[key]));
+                        });
+
+
+                        $('#job-stats-modal').modal('show');
+
+
+                    }
+                        console.log(data);
+                    },
+                error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR.status);
+                    },
+               dataType: "json"
+            });
+        });
+
+    </script>
 
 {% endblock %}
