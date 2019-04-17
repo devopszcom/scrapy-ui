@@ -164,14 +164,14 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Job stats</h5>
+                    <h4 class="modal-title">Job stats</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
 
-                    <h5>downloader</h5>
+                    <h5>Downloader</h5>
                     <div class="row downloader">
                         <div class="col-md-3">request_bytes: 6833976</div>
                     </div>
@@ -183,7 +183,7 @@
                     </div>
 
                     <hr>
-                    <h5>scheduler</h5>
+                    <h5>Scheduler</h5>
                     <div class="row scheduler">
                         <div class="col-md-3">request_bytes: 6833976</div>
                     </div>
@@ -198,7 +198,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Node</button>
                 </div>
             </div>
         </div>
@@ -212,6 +211,23 @@
     .modal-stats-btn {
         cursor: pointer;
     }
+
+    #job-stats-modal {
+        font-size: 1.1em;
+    }
+
+    #job-stats-modal h5 {
+        font-size: 1.15em;
+        font-weight: bold;
+    }
+
+    .info-key {
+
+    }
+    .info-value {
+        color: #0074a2;
+        font-weight: bold;
+    }
     </style>
 
 {% endblock %}
@@ -219,7 +235,7 @@
     <script>
 
         function getElement(key, value){
-            return "<div class=\"col-md-4\">"+ key +": "+ value +"</div>"
+            return "<div class=\"col-md-4\"><span class=\"info-key\">"+ key +"</span>: <span class=\"info-value\">"+ value +"</span></div>"
         }
 
         $(".modal-stats-btn").click(function (e) {

@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 import requests
 import re
 import json
@@ -42,7 +42,7 @@ def status_node(request, node_id, project_name):
     jobs['finished'] = list(reversed(jobs['finished']))[:15]
 
     for job in jobs['finished']:
-        during = datetime.strptime(job["end_time"], "%Y-%m-%d %H:%M:%S.%f") - datetime.strptime(
+        during = datetime.datetime.strptime(job["end_time"], "%Y-%m-%d %H:%M:%S.%f") - datetime.datetime.strptime(
             job["start_time"], "%Y-%m-%d %H:%M:%S.%f")
         job["during"] = during.total_seconds() / 60
         job["during_unit"] = "minutes"
@@ -109,7 +109,10 @@ def cancel_job(request, node_id, project_name, job_id):
 
 def parse_log(request):
     try:
-        url = "http://25.46.243.254:6800/logs/default/image_raw_product/f6fdad5005c711e991c50242ac110002.log"
+        # url = "http://25.46.243.254:6800/logs/default/image_raw_product/f6fdad5005c711e991c50242ac110002.log"
+        url = request.GET.get('url', None)
+        if not url:
+            raise Exception('Url is required')
         response = requests.get(url)
         content = response.text
         matches = re.search(r"Dumping Scrapy stats:\s({[\w\/\d\s\,\(':\.\)]+})", content)
@@ -131,7 +134,11 @@ def parse_log(request):
             elif k.startswith("scheduler"):
                 result["scheduler"][k[10:]] = v
             else:
-                result["more"][k] = v
+                if k in ['start_time', 'finish_time']:
+                    # result["more"][k] = str(eval(v))
+                    continue
+                else:
+                    result["more"][k] = v
 
         return JsonResponse({"status": "ok", "result": result})
     except Exception as e:
