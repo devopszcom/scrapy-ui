@@ -60,7 +60,9 @@
             {% for spider in spiders %}
                 <tr>
                     <td><span class="badge badge-info spider-name">{{ spider }}</span></td>
-                    <td class="text-right"><a class="btn btn-info btn-sm" href="{% url 'crawler:add_job' node.id project_name spider %}"><i class="fa fa-play"></i> Run</a></td>
+                    <td class="text-right"><a class="btn btn-info btn-sm"
+                                              href="{% url 'crawler:add_job' node.id project_name spider %}"><i
+                            class="fa fa-play"></i> Run</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -82,7 +84,9 @@
             </thead>
             <tbody>
             {% if not jobs.running %}
-                <tr><td class="no-table-data">No running jobs</td></tr>
+                <tr>
+                    <td class="no-table-data">No running jobs</td>
+                </tr>
             {% endif %}
             {% for job in jobs.running %}
                 <tr>
@@ -91,7 +95,9 @@
                     <td>{{ job.pid }}</td>
                     <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
                     <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
-                    <td class="text-right"><a class="btn btn-danger btn-sm" href="{% url 'crawler:cancel_job' node.id project_name job.id %}"><i class="fa fa-times"></i> Cancel</a></td>
+                    <td class="text-right"><a class="btn btn-danger btn-sm"
+                                              href="{% url 'crawler:cancel_job' node.id project_name job.id %}"><i
+                            class="fa fa-times"></i> Cancel</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -111,14 +117,18 @@
             </thead>
             <tbody>
             {% if not jobs.pending %}
-                <tr><td class="no-table-data">No pending jobs </td></tr>
+                <tr>
+                    <td class="no-table-data">No pending jobs</td>
+                </tr>
             {% endif %}
             {% for job in jobs.pending %}
                 <tr>
                     <td>{{ job.id }}</td>
                     <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td><a target="_blank" href="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">Logs</a></td>
-                    <td class="text-right"><a class="btn btn-danger btn-sm" href="{% url 'crawler:cancel_job' node.id project_name job.id %}"><i class="fa fa-times"></i> Cancel</a></td>
+                    <td class="text-right"><a class="btn btn-danger btn-sm"
+                                              href="{% url 'crawler:cancel_job' node.id project_name job.id %}"><i
+                            class="fa fa-times"></i> Cancel</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -141,11 +151,14 @@
             </thead>
             <tbody>
             {% if not jobs.finished %}
-                <tr><td class="no-table-data">No finished jobs </td></tr>
+                <tr>
+                    <td class="no-table-data">No finished jobs</td>
+                </tr>
             {% endif %}
             {% for job in jobs.finished %}
                 <tr>
-                    <td class="modal-stats-btn" data-url="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">{{ job.id }}</td>
+                    <td class="modal-stats-btn"
+                        data-url="{{ log_url }}/{{ job.spider }}/{{ job.id }}.log">{{ job.id }}</td>
                     <td><span class="badge badge-info spider-name">{{ job.spider }}</span></td>
                     <td class="mm-time" data-utc="{{ job.start_time }}">{{ job.start_time }}</td>
                     <td class="mm-time" data-utc="{{ job.end_time }}">{{ job.end_time }}</td>
@@ -159,7 +172,8 @@
     </div>
 
 
-    <div id="job-stats-modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    <div id="job-stats-modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -171,6 +185,12 @@
                 </div>
                 <div class="modal-body">
 
+                    <h5>Result</h5>
+                    <div class="row result">
+                        <div class="col-md-3">request_bytes: 6833976</div>
+                    </div>
+
+                    <hr>
                     <h5>Downloader</h5>
                     <div class="row downloader">
                         <div class="col-md-3">request_bytes: 6833976</div>
@@ -208,71 +228,78 @@
 {% endblock %}
 {% block style %}
     <style>
-    .modal-stats-btn {
-        cursor: pointer;
-    }
+        .modal-stats-btn {
+            cursor: pointer;
+        }
 
-    #job-stats-modal {
-        font-size: 1.1em;
-    }
+        #job-stats-modal {
+            font-size: 1.1em;
+        }
 
-    #job-stats-modal h5 {
-        font-size: 1.15em;
-        font-weight: bold;
-    }
+        #job-stats-modal h5 {
+            font-size: 1.15em;
+            font-weight: bold;
+        }
 
-    .info-key {
+        .info-key {
 
-    }
-    .info-value {
-        color: #0074a2;
-        font-weight: bold;
-    }
+        }
+
+        .info-value {
+            color: #0074a2;
+            font-weight: bold;
+        }
     </style>
 
 {% endblock %}
 {% block script %}
     <script>
 
-        function getElement(key, value){
-            return "<div class=\"col-md-4\"><span class=\"info-key\">"+ key +"</span>: <span class=\"info-value\">"+ value +"</span></div>"
+        function getElement(key, value) {
+            return "<div class=\"col-md-4\"><span class=\"info-key\">" + key + "</span>: <span class=\"info-value\">" + value + "</span></div>"
         }
 
         $(".modal-stats-btn").click(function (e) {
             console.log($(this).attr("data-url"));
-
+            $("#loading-wrapper").addClass("loading");
             $.ajax({
-                type:"GET",
+                type: "GET",
                 data: {
                     url: $(this).attr("data-url")
                 },
                 url: "http://localhost:8000{% url 'crawler:parse_log' %}",
-                success: function(data) {
-                    if(data.status === "ok"){
+                success: function (data) {
+                    if (data.status === "ok") {
                         console.log(data);
+
+                        $('#job-stats-modal .result').empty();
+                        var result = data.result.result;
+                        Object.keys(result).forEach(function (key) {
+                            $('#job-stats-modal .result').append(getElement(key, result[key]));
+                        });
 
                         $('#job-stats-modal .downloader').empty();
                         var downloader = data.result.downloader;
-                        Object.keys(downloader).forEach(function(key) {
+                        Object.keys(downloader).forEach(function (key) {
                             $('#job-stats-modal .downloader').append(getElement(key, downloader[key]));
                         });
 
 
                         $('#job-stats-modal .log_count').empty();
                         var log_count = data.result.log_count;
-                        Object.keys(log_count).forEach(function(key) {
+                        Object.keys(log_count).forEach(function (key) {
                             $('#job-stats-modal .log_count').append(getElement(key, log_count[key]));
                         });
 
                         $('#job-stats-modal .scheduler').empty();
                         var scheduler = data.result.scheduler;
-                        Object.keys(scheduler).forEach(function(key) {
+                        Object.keys(scheduler).forEach(function (key) {
                             $('#job-stats-modal .scheduler').append(getElement(key, scheduler[key]));
                         });
 
                         $('#job-stats-modal .more').empty();
                         var more = data.result.more;
-                        Object.keys(more).forEach(function(key) {
+                        Object.keys(more).forEach(function (key) {
                             $('#job-stats-modal .more').append(getElement(key, more[key]));
                         });
 
@@ -281,12 +308,13 @@
 
 
                     }
-                        console.log(data);
-                    },
-                error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(jqXHR.status);
-                    },
-               dataType: "json"
+                    $("#loading-wrapper").removeClass("loading");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.status);
+                    $("#loading-wrapper").removeClass("loading");
+                },
+                dataType: "json"
             });
         });
 

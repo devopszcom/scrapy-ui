@@ -119,6 +119,11 @@ def parse_log(request):
         stats = matches.group(1)
         stats = utils.convert_to_json(stats)
         result = {
+            "result": {
+                "item_scraped_count": 0,
+                "response_received_count": 0,
+                "finish_reason": ""
+            },
             "downloader": {},
             "log_count": {},
             "scheduler": {},
@@ -133,6 +138,8 @@ def parse_log(request):
                 result["log_count"][k[10:]] = v
             elif k.startswith("scheduler"):
                 result["scheduler"][k[10:]] = v
+            elif k in result['result'].keys():
+                result['result'][k] = v
             else:
                 if k in ['start_time', 'finish_time']:
                     # result["more"][k] = str(eval(v))
